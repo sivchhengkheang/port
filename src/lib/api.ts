@@ -1,4 +1,4 @@
-const BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000' || 'https://disparity-document-active.ngrok-free.dev/' || 'https://backend-server-ham1.onrender.com').replace(/\/$/, '');
+const BASE_URL = (import.meta.env.VITE_API_URL ||'https://backend-server-ham1.onrender.com').replace(/\/$/, '');
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const token = localStorage.getItem('auth_token');
 
