@@ -220,7 +220,7 @@ export default function AuthModal() {
 
                             <Button
                               type="button"
-                              onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`}
+                              onClick={() => window.location.href = `https://server-3gru.onrender.com/api/auth/google`}
                               className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-secondary/30 hover:bg-secondary/50 text-foreground border border-secondary/40 hover:border-secondary hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(100,100,100,0.1)]"
                             >
                               <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -379,7 +379,7 @@ export default function AuthModal() {
 
                             <Button
                               type="button"
-                              onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`}
+                              onClick={() => window.location.href = `https://server-3gru.onrender.com/api/auth/google`}
                               className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-secondary/30 hover:bg-secondary/50 text-foreground border border-secondary/40 hover:border-secondary hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(100,100,100,0.1)]"
                             >
                               <svg className="w-4 h-4" viewBox="0 0 24 24">
