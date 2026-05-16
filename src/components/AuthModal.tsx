@@ -14,27 +14,7 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
-
-function TelegramLoginWidget() {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!containerRef.current) return;
-    containerRef.current.innerHTML = '';
-    const script = document.createElement('script');
-    script.src = 'https://telegram.org/js/telegram-widget.js?22';
-    script.setAttribute('data-telegram-login', 'sdfadadfa_bot');
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-auth-url', 'https://portfolio-puce-chi-d0nzsuka1i.vercel.app/');
-    script.setAttribute('data-request-access', 'write');
-    script.async = true;
-    containerRef.current.appendChild(script);
-  }, []);
-
-  return <div ref={containerRef} className="flex justify-center w-full mt-2" />;
-}
-
-
+const API_URL = import.meta.env.SERVER_ENDPOING;
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password requires 6+ characters"),
@@ -45,6 +25,10 @@ const registerSchema = z.object({
   lastName: z.string().min(2, "Last name requires 2+ characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password requires 6+ characters"),
+  confirmPassword: z.string().min(6, "Confirm password is required"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export default function AuthModal() {
@@ -72,7 +56,7 @@ export default function AuthModal() {
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { firstName: "", lastName: "", email: "", password: "" },
+    defaultValues: { firstName: "", lastName: "", email: "", password: "", confirmPassword: "" },
   });
 
   const onLogin = async (data: z.infer<typeof loginSchema>) => {
@@ -103,8 +87,8 @@ export default function AuthModal() {
 
   return (
     <Dialog open={isAuthModalOpen} onOpenChange={(open) => !open && closeAuthModal()}>
-      <DialogContent className="max-w-[460px] p-0 bg-transparent border-none shadow-none">
-        <div className="relative w-full">
+      <DialogContent className="max-w-[460px] p-0 bg-transparent  border-none shadow-none">
+        <div className="relative w-full ">
           {/* Error Feedback */}
           {/* <AnimatePresence>
             {error && (
@@ -130,20 +114,29 @@ export default function AuthModal() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative"
+            className="relative "
           >
-            <Card className="relative glass-panel p-2 rounded-[40px] border-white/5 shadow-[0_64px_128px_-16px_rgba(0,0,0,0.8)] overflow-hidden">
+            <Card className="relative glass-panel rounded-[40px] border-border/50 shadow-[0_64px_128px_-16px_rgba(0,0,0,0.8)] overflow-hidden ">
               <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-50" />
 
               <CardHeader className="pt-10 pb-6 px-10 text-center justify-center">
-                <div className="flex justify-center mb-6">
-                   <div className="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center text-primary shadow-[0_0_20px_rgba(0,180,180,0.2)]">
-                      <ShieldCheck className="w-6 h-6" />
-                   </div>
+                <div className="flex items-center justify-center gap-6">
+                  <button
+                    type="button"
+                    onClick={() => { setIsLogin(true); setError(null); }}
+                    className={`text-4xl font-sans font-medium tracking-tight transition-all duration-500 ${isLogin ? "text-primary drop-shadow-md" : "text-muted-foreground/40 hover:text-foreground/80 hover:scale-105"}`}
+                  >
+                    Login
+                  </button>
+                  <span className="text-2xl text-primary/20 font-light">/</span>
+                  <button
+                    type="button"
+                    onClick={() => { setIsLogin(false); setError(null); }}
+                    className={`text-4xl font-sans font-medium tracking-tight transition-all duration-500 ${!isLogin ? "text-primary drop-shadow-md" : "text-muted-foreground/40 hover:text-foreground/80 hover:scale-105"}`}
+                  >
+                    Register
+                  </button>
                 </div>
-                <CardTitle className="text-4xl font-sans font-medium tracking-tight text-white/90">
-                  {isLogin ? "Login" : "Register"}
-                </CardTitle>
               </CardHeader>
 
               <CardContent className="px-10 pb-6">
@@ -163,13 +156,13 @@ export default function AuthModal() {
                             name="email"
                             render={({ field }) => (
                               <FormItem className="space-y-3">
-                                <FormLabel className="text-sm font-serif text-muted-foreground/90 font-bold ml-1">Email</FormLabel>
+                                <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">Email</FormLabel>
                                 <FormControl>
                                   <div className="group relative">
-                                    <Mail className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/10 group-focus-within:text-primary transition-colors" />
+                                    <Mail className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40 group-focus-within:text-primary transition-colors duration-300" />
                                     <Input
                                       placeholder="user@gmail.com"
-                                      className="h-14 bg-white/[0.03] border-white/5 focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-500 rounded-2xl font-sans text-[11px] font-bold tracking-widest px-6 pr-14 lowercase"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-sans text-[11px] font-bold tracking-widest px-6 pr-14 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
                                       {...field}
                                     />
                                   </div>
@@ -183,13 +176,13 @@ export default function AuthModal() {
                             name="password"
                             render={({ field }) => (
                               <FormItem className="space-y-3">
-                                <FormLabel className="text-sm font-serif text-muted-foreground/90 font-bold ml-1">Password</FormLabel>
+                                <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">Password</FormLabel>
                                 <FormControl>
                                   <div className="group relative">
                                     <button
                                       type="button"
                                       onClick={() => setShowPassword(!showPassword)}
-                                      className="absolute right-5 top-1/2 -translate-y-1/2 z-20 text-white/20 hover:text-primary transition-colors focus:outline-none"
+                                      className="absolute right-5 top-1/2 -translate-y-1/2 z-20 text-primary/40 hover:text-primary transition-colors duration-300 focus:outline-none"
                                     >
                                       {showPassword ? (
                                         <EyeOff className="h-4 w-4" />
@@ -200,30 +193,35 @@ export default function AuthModal() {
                                     <Input
                                       type={showPassword ? "text" : "password"}
                                       placeholder="••••••••"
-                                      className="h-14 bg-white/[0.03] border-white/5 focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
                                       {...field}
                                     />
                                   </div>
                                 </FormControl>
-                                <FormMessage className="text-[8px] font-mono text-red-500" />
+                                <div className="flex justify-between items-center mt-2">
+                                  <FormMessage className="text-[8px] font-mono text-red-500" />
+                                  <button type="button" className="text-[10px] font-sans font-medium text-muted-foreground hover:text-primary transition-colors ml-auto">
+                                    Forgot Password?
+                                  </button>
+                                </div>
                               </FormItem>
                             )}
                           />
-                          <div className="pt-6 space-y-4">
+                          <div className="pt-4 space-y-4">
                             <Button
                               type="submit"
                               disabled={isSubmitting}
-                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold  transition-all duration-500 bg-primary/80 hover:bg-primary/95 text-background hover:scale-105 active:scale-95 shadow-xl shadow-primary/20"
+                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-primary/80 hover:bg-primary/95 text-background hover:scale-105 active:scale-95 shadow-md shadow-primary/30"
                             >
                               {isSubmitting ? (
                                 <Loader2 className="h-5 w-5 animate-spin" />
-                              ) : "Login"}
+                              ) : "Continue"}
                             </Button>
-                            
+
                             <Button
                               type="button"
-                              onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
-                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                              onClick={() => window.location.href = `${API_URL}/api/auth/google`}
+                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-secondary/30 hover:bg-secondary/50 text-foreground border border-secondary/40 hover:border-secondary hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(100,100,100,0.1)]"
                             >
                               <svg className="w-4 h-4" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -233,8 +231,6 @@ export default function AuthModal() {
                               </svg>
                               Continue with Google
                             </Button>
-                            
-                            <TelegramLoginWidget />
                           </div>
                         </form>
                       </Form>
@@ -255,11 +251,11 @@ export default function AuthModal() {
                               name="firstName"
                               render={({ field }) => (
                                 <FormItem className="space-y-3">
-                                  <FormLabel className="text-sm font-serif text-muted-foreground/90 font-bold ml-1">First name</FormLabel>
+                                  <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">First name</FormLabel>
                                   <FormControl>
                                     <Input
                                       placeholder="First name"
-                                      className="h-14 bg-white/[0.03] border-white/5 focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 lowercase"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
                                       {...field}
                                     />
                                   </FormControl>
@@ -272,11 +268,11 @@ export default function AuthModal() {
                               name="lastName"
                               render={({ field }) => (
                                 <FormItem className="space-y-3">
-                                  <FormLabel className="text-sm font-serif text-muted-foreground/90 font-bold ml-1">Last name</FormLabel>
+                                  <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">Last name</FormLabel>
                                   <FormControl>
                                     <Input
                                       placeholder="Last name"
-                                      className="h-14 bg-white/[0.03] border-white/5 focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 lowercase"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
                                       {...field}
                                     />
                                   </FormControl>
@@ -290,13 +286,13 @@ export default function AuthModal() {
                             name="email"
                             render={({ field }) => (
                               <FormItem className="space-y-3">
-                                <FormLabel className="text-sm font-serif text-muted-foreground/90 font-bold ml-1">Email</FormLabel>
+                                <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">Email</FormLabel>
                                 <FormControl>
                                   <div className="group relative">
-                                    <Mail className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/10 group-focus-within:text-primary transition-colors" />
+                                    <Mail className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40 group-focus-within:text-primary transition-colors duration-300" />
                                     <Input
                                       placeholder="example@gmail.com"
-                                      className="h-14 bg-white/[0.03] border-white/5 focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
                                       {...field}
                                     />
                                   </div>
@@ -310,13 +306,13 @@ export default function AuthModal() {
                             name="password"
                             render={({ field }) => (
                               <FormItem className="space-y-3">
-                                <FormLabel className="text-sm font-serif text-muted-foreground/90 font-bold ml-1">Password</FormLabel>
+                                <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">Password</FormLabel>
                                 <FormControl>
                                   <div className="group relative">
                                     <button
                                       type="button"
                                       onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-                                      className="absolute right-5 top-1/2 -translate-y-1/2 z-20 text-white/20 hover:text-primary transition-colors focus:outline-none"
+                                      className="absolute right-5 top-1/2 -translate-y-1/2 z-20 text-primary/40 hover:text-primary transition-colors duration-300 focus:outline-none"
                                     >
                                       {showRegisterPassword ? (
                                         <EyeOff className="h-4 w-4" />
@@ -327,7 +323,7 @@ export default function AuthModal() {
                                     <Input
                                       type={showRegisterPassword ? "text" : "password"}
                                       placeholder="••••••••"
-                                      className="h-14 bg-white/[0.03] border-white/5 focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
                                       {...field}
                                     />
                                   </div>
@@ -336,21 +332,55 @@ export default function AuthModal() {
                               </FormItem>
                             )}
                           />
-                          <div className="pt-6 space-y-4">
+                          <FormField
+                            control={registerForm.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                              <FormItem className="space-y-3">
+                                <FormLabel className="text-sm font-sans text-muted-foreground/90 font-bold ml-1">Confirm Password</FormLabel>
+                                <FormControl>
+                                  <div className="group relative">
+                                    <button
+                                      type="button"
+                                      onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                                      className="absolute right-5 top-1/2 -translate-y-1/2 z-20 text-primary/40 hover:text-primary transition-colors duration-300 focus:outline-none"
+                                    >
+                                      {showRegisterPassword ? (
+                                        <EyeOff className="h-4 w-4" />
+                                      ) : (
+                                        <Eye className="h-4 w-4" />
+                                      )}
+                                    </button>
+                                    <Input
+                                      type={showRegisterPassword ? "text" : "password"}
+                                      placeholder="••••••••"
+                                      className="h-14 bg-primary/[0.03] border-primary/20 focus:border-primary/50 focus:bg-primary/[0.08] transition-all duration-500 rounded-2xl font-mono text-[11px] font-bold tracking-widest px-6 pr-14 lowercase text-foreground focus:shadow-[0_0_20px_rgba(255,100,50,0.1)] placeholder:text-muted-foreground/60"
+                                      {...field}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage className="text-[8px] font-mono text-red-500" />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="pt-2 space-y-4">
+                            <p className="text-center text-[10px] font-sans text-muted-foreground/80 pb-2">
+                              By registering, you agree to our Terms of Service.
+                            </p>
                             <Button
                               type="submit"
                               disabled={isSubmitting}
-                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold  transition-all duration-500 bg-primary/80 hover:bg-primary/95 text-background hover:scale-105 active:scale-95 shadow-xl shadow-primary/20"
+                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-primary/80 hover:bg-primary/95 text-background hover:scale-105 active:scale-95 shadow-md shadow-primary/30"
                             >
                               {isSubmitting ? (
                                 <Loader2 className="h-5 w-5 animate-spin" />
-                              ) : "Register"}
+                              ) : "Continue"}
                             </Button>
 
                             <Button
                               type="button"
-                              onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
-                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                              onClick={() => window.location.href = `${API_URL}/google`}
+                              className="w-full h-14 rounded-full font-sans text-[12px] font-bold transition-all duration-500 bg-secondary/30 hover:bg-secondary/50 text-foreground border border-secondary/40 hover:border-secondary hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(100,100,100,0.1)]"
                             >
                               <svg className="w-4 h-4" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -360,8 +390,7 @@ export default function AuthModal() {
                               </svg>
                               Continue with Google
                             </Button>
-                            
-                            <TelegramLoginWidget />
+
                           </div>
                         </form>
                       </Form>
@@ -370,7 +399,7 @@ export default function AuthModal() {
                 </AnimatePresence>
               </CardContent>
 
-              <CardFooter className="px-10 pb-8 flex  items-center pt-8 border-t border-white/5 flex-row gap-1 text-center justify-center">
+              {/* <CardFooter className="px-10 pb-8 flex  items-center pt-8 border-t border-border/50 flex-row gap-1 text-center justify-center">
                 <span className="text-[9px] font-mono text-muted-foreground/90 font-bold ml-1">{isLogin ? "Don't have an account?" : "Already have an account?"}</span>
                 <button
                   onClick={() => {
@@ -382,7 +411,7 @@ export default function AuthModal() {
                   <span>{isLogin ? "Register" : "Login"}</span>
                   <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-2 transition-transform" />
                 </button>
-              </CardFooter>
+              </CardFooter> */}
             </Card>
           </motion.div>
         </div>

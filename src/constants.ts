@@ -97,8 +97,8 @@ export const GAMES: Game[] = [
     category: "mouse",
   },
   {
-    id: "RobotBrainiac",
-    title: "Robot Brainiac",
+    id: "RobotObstacle",
+    title: "Robot Obstacle",
     description:
       "An action-packed puzzle game where you guide a brilliant robot through challenging brain-teasing challenges. Solve puzzles, navigate obstacles, and push your strategy skills to the limit!",
     iframeUrl: "https://robot-brainiac.vercel.app/",

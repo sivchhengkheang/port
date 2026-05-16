@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Game } from "../constants";
-import { Play, Download, Cpu } from "lucide-react";
+import { Play, Download, Cpu, ExternalLink } from "lucide-react";
 import { useRequireAuth } from "../hooks/useRequireAuth";
 
 export function AntigravityCard({
@@ -57,20 +57,23 @@ export function AntigravityCard({
 
 
           {/* Category Tag */}
-          <div className="absolute top-6 left-6 flex items-center gap-2 px-3 py-1.5 glass-panel rounded-full border-white/10 backdrop-blur-md">
-            <Cpu size={12} className="text-primary" />
-            <span className="font-mono text-[8px] font-bold uppercase tracking-widest text-foreground">
-              {game.category}
-            </span>
-          </div>
+
         </div>
 
         {/* Content Section */}
-        <div className="p-6 md:p-8 flex flex-col flex-1 justify-between gap-6">
+        <div className="p-6 md:p-8 flex flex-col gap-6">
           <div className="space-y-4">
-            <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight text-foreground group-hover:text-primary transition-colors duration-500">
-              {game.title}
-            </h3>
+            <div className="flex items-center justify-between">
+
+              <h3 className="text-2xl md:text-3xl font-display font-medium tracking-tight text-foreground group-hover:text-primary transition-colors duration-500">
+                {game.title}
+              </h3>
+              <div className="flex items-center gap-2 px-3 py-1.5 glass-panel rounded-full border-white/10 backdrop-blur-md">
+                <span className="font-mono text-[8px] font-bold uppercase tracking-widest text-primary/80">
+                  {game.category}
+                </span>
+              </div>
+            </div>
             <p className="text-sm text-muted-foreground leading-relaxed italic line-clamp-3 font-sans opacity-70 group-hover:opacity-100 transition-opacity">
               "{game.description}"
             </p>
@@ -90,11 +93,22 @@ export function AntigravityCard({
                 transition={{ duration: 0.3 }}
               >
                 <Play size={14} className="fill-current" />
-                <span className="font-mono text-[10px] font-bold uppercase tracking-widest">Execute</span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest">Play</span>
               </motion.div>
             </button>
 
-            <button
+            <a
+              href={game.iframeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="w-12 h-12 glass-panel rounded-2xl flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-500"
+              title="Open in Browser"
+            >
+              <ExternalLink size={16} />
+            </a>
+
+            {/* <button
               onClick={(e) => {
                 e.stopPropagation();
                 protectedOnDownload(game.appImageUrl);
@@ -102,8 +116,8 @@ export function AntigravityCard({
               className="w-12 h-12 glass-panel rounded-2xl flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-500"
               title="Download Build"
             >
-              <Download size={18} />
-            </button>
+              <Download size={16} />
+            </button> */}
           </div>
         </div>
       </motion.div>
