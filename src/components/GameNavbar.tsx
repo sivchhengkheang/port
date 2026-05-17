@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Gamepad2, ShieldCheck, LogOut, Command, LogIn } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "@/lib/utils";
+import logo from "../../public/port.png"
+
 
 export default function GameNavbar() {
   const { user, signOut, openAuthModal } = useAuth();
@@ -29,11 +31,11 @@ export default function GameNavbar() {
       <div className="max-w-[1536px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 glass-panel rounded-xl flex items-center justify-center">
-            <Command size={18} className="text-primary" />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center  bg-primary/90">
+            <img src={logo} alt="Logo" className="w-full h-full rounded-xl" />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-serif font-bold text-2xl tracking-wide text-primary ">PORT</span>
+            <span className="font-serif font-bold text-2xl tracking-wide text-primary text-gradient ">PORT</span>
           </div>
         </div>
 
@@ -72,12 +74,12 @@ export default function GameNavbar() {
               onClick={() => openAuthModal()}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-full font-mono text-[10px] font-bold uppercase tracking-widest hover:scale-105 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
             >
-              <LogIn size={12} />
-              <span className="hidden sm:block">Login</span>
+              <LogIn className="hidden sm:block" size={12} />
+              <span className="">Login</span>
             </motion.button>
           )}
         </AnimatePresence>
       </div>
     </motion.header>
   );
-}
+} 

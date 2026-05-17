@@ -116,15 +116,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    // Optimistically clear local state for instant feedback
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    setUser(null);
+    toast.info("Logged out successfully");
+
     try {
+      // Perform server logout in the background
       await authApi.signOut();
     } catch (error) {
-      console.error("Logout failed at server, cleaning up local state", error);
-    } finally {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_user');
-      setUser(null);
-      toast.info("Logged out successfully");
+      console.error("Logout failed at server", error);
     }
   };
 

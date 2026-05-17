@@ -64,7 +64,7 @@ export const GAMES: Game[] = [
     id: "TypingCode",
     title: "Typing Code",
     description:
-      "The classic typing code game. Type the code correctly to keep the game going!",
+      "The classic typing code game. Type the code word of programing language you would like to learn! Type the code correctly to keep the game going!",
     iframeUrl: "https://typing-code-game.vercel.app",
     appImageUrl:
       "https://drive.google.com/file/d/1l1rA29APscP38-PhAwd84miuwOQCI2-K/view?usp=sharing",
@@ -104,8 +104,8 @@ export const GAMES: Game[] = [
     iframeUrl: "https://robot-brainiac.vercel.app/",
     appImageUrl:
       "https://drive.google.com/file/d/1fnc-RCf242B9dC5a516VlFERCZ_HVJzi/view?usp=sharing",
-    cover: "/game-cover/inside-game/inside-robot-brainiac.png",
-    thumbnail: "/game-cover/robot-brainiac.png",
+    cover: "/game-cover/inside-game/inside-robot-obstacle.png",
+    thumbnail: "/game-cover/robot-obstacle.png",
     category: "Action",
   },
   {

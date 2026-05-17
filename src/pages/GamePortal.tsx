@@ -12,6 +12,7 @@ import {
   Search,
   ChevronRight,
   ExternalLink,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRequireAuth } from "../hooks/useRequireAuth";
@@ -25,7 +26,6 @@ export default function GamePortal() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeGame, setActiveGame] = useState<Game | null>(null);
-  const [isHoveringClose, setIsHoveringClose] = useState(false);
   const { requireAuth } = useRequireAuth();
 
   // Featured game = first in list
@@ -78,7 +78,7 @@ export default function GamePortal() {
       {/* ══════════════════════════════════════════════
           HERO SECTION — Featured Game Spotlight
       ══════════════════════════════════════════════ */}
-      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 px-6 md:px-10 max-w-7xl mx-auto">
+      <section className="relative pt-28 pb-10 md:pt-36 md:pb-16 px-6 md:px-10 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           {/* Left — Hero Text */}
           <div className="space-y-8">
@@ -138,22 +138,7 @@ export default function GamePortal() {
               ))}
             </motion.div>
 
-            {/* Featured Game CTA */}
-            <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.45 }}
-              onClick={() => handlePlay(featuredGame)}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="group flex items-center gap-4 px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-mono text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-primary/30 hover:shadow-primary/40 hover:scale-103 transition-all duration-300"
-            >
-              <div className="w-8 h-8 bg-primary-foreground/10 rounded-full flex items-center justify-center">
-                <Play size={14} className="fill-current translate-x-0.5" />
-              </div>
-              Play {featuredGame.title}
-              <ChevronRight size={14} className="opacity-60 group-hover:translate-x-1 transition-transform duration-300" />
-            </motion.button>
+
           </div>
 
           {/* Right — Featured Game Thumbnail */}
@@ -161,7 +146,7 @@ export default function GamePortal() {
             initial={{ opacity: 0, scale: 0.95, x: 30 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 1.1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="relative group cursor-pointer"
+            className="hidden lg:block relative group cursor-pointer"
             onClick={() => handlePlay(featuredGame)}
           >
             {/* Glow behind image */}
@@ -171,7 +156,7 @@ export default function GamePortal() {
               <motion.img
                 src={featuredGame.thumbnail}
                 alt={featuredGame.title}
-                className="w-full aspect-[16/10] object-cover"
+                className="w-full aspect-[16/10] object-cover   "
                 whileHover={{ scale: 1.04 }}
                 transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
               />
@@ -303,10 +288,10 @@ export default function GamePortal() {
       {/* ══════════════════════════════════════════════
           FOOTER BRANDING
       ══════════════════════════════════════════════ */}
-      <footer className="border-t border-white/5 py-10 flex flex-col items-center gap-4">
+      <footer className="border-t border-white/5 pb-10 flex flex-col items-center gap-5">
         <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-        <p className="font-mono text-[9px] font-bold tracking-[1em] uppercase text-muted-foreground/30">
-          PORT // GAME VAULT // 2026
+        <p className="font-mono text-[9px] font-bold tracking-[6px] uppercase text-muted-foreground">
+          Made // by // Cĥĥenĝ Coké
         </p>
       </footer>
 
@@ -321,29 +306,6 @@ export default function GamePortal() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-[60px] flex flex-col"
           >
-            {/* Hover zone for close button */}
-            <div
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-16 z-[110] flex justify-center items-start pt-4 pointer-events-none"
-              onMouseEnter={() => setIsHoveringClose(true)}
-              onMouseLeave={() => setIsHoveringClose(false)}
-            >
-              <div className="absolute inset-0 pointer-events-auto rounded-b-3xl" />
-              <motion.button
-                onClick={handleClose}
-                animate={{
-                  opacity: isHoveringClose ? 1 : 0,
-                  y: isHoveringClose ? 0 : -15,
-                  scale: isHoveringClose ? 1 : 0.8,
-                }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="relative z-[120] pointer-events-auto w-12 h-12 rounded-full glass-panel flex items-center justify-center text-foreground hover:text-primary hover:border-primary/40 transition-colors shadow-2xl shadow-black/50"
-              >
-                <X className="w-5 h-5" />
-              </motion.button>
-            </div>
-
             {/* iFrame */}
             <div className="flex-1 relative flex items-center justify-center">
               <motion.div
@@ -363,10 +325,19 @@ export default function GamePortal() {
             </div>
 
             {/* Overlay Footer bar */}
-            <div className="relative h-10 glass-panel border-t border-white/5 px-8 flex items-center justify-between bg-background/60 backdrop-blur-xs">
-              <div className="flex items-center gap-3 text-[8px] font-mono font-bold  tracking-widest text-primary">
-                <Monitor className="w-4 h-4" />
-                <span className="hidden sm:block ">Press <em className="text-primary font-bold text-[10px]">ESC</em> to close the game</span>
+            <div className="relative h-10 glass-panel border-t border-white/5 px-5 flex items-center justify-between bg-background/60 backdrop-blur-xs">
+              <div className="flex items-center gap-3 text-[8px] font-mono font-bold tracking-widest text-primary">
+                <Button
+                  onClick={handleClose}
+                  variant="outline"
+                  className="h-7 px-4 rounded-full border-red-500/20 hover:bg-red-500/10 text-red-500 hover:text-red-400 font-mono text-[8px] font-bold tracking-widest uppercase transition-all flex items-center gap-3"
+                >
+                  <ArrowLeft className="w-3 h-3" />
+                  <span className="hidden sm:block">Back</span>
+                </Button>
+                <div className="h-5 w-px bg-white/10 hidden md:block" />
+                <Monitor className="w-4 h-4 hidden md:block" />
+                <span className="hidden md:block">Press <em className="text-primary font-bold text-[10px]">ESC</em> to close</span>
               </div>
 
               <div className="flex items-center gap-3">
