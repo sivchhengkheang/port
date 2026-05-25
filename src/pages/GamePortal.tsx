@@ -90,7 +90,7 @@ export default function GamePortal() {
             >
               <span className="w-8 h-[1px] bg-primary/50" />
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.4em] text-primary">
-                PORT — Game Vault
+                GAME PORT
               </span>
             </motion.div>
 
@@ -100,9 +100,9 @@ export default function GamePortal() {
               transition={{ duration: 0.9, delay: 0.1 }}
               className="text-5xl md:text-7xl font-display font-medium tracking-tighter leading-none text-gradient uppercase"
             >
-              PORT{" "}
+              GAME{" "}
               <span className="italic font-bold">
-                GAMES.
+                PORT.
               </span>
             </motion.h1>
 
@@ -112,7 +112,7 @@ export default function GamePortal() {
               transition={{ duration: 0.8, delay: 0.25 }}
               className="text-base md:text-lg text-muted-foreground font-sans italic leading-relaxed border-l-2 border-primary/20 pl-5 max-w-md"
             >
-              "A collection of games I've created — giving you extra skills, computer thinking, and a fun time along the way."
+              "A collection of games I've created — sharpening your skills, computational thinking, and a fun time along the way."
             </motion.p>
 
             {/* Stats Row */}

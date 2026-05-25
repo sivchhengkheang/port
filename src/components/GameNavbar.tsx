@@ -35,7 +35,7 @@ export default function GameNavbar() {
             <img src={logo} alt="Logo" className="w-full h-full rounded-xl" />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-serif font-bold text-2xl tracking-wide text-primary text-gradient ">PORT</span>
+            <span className="font-serif font-bold text-2xl tracking-wide text-primary text-gradient ">GAME</span>
           </div>
         </div>
 
